@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { AppBar, Box, Button, Dialog, DialogContent, IconButton, Slide, TextField, Toolbar, Typography } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
+import { Box, Button, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
-import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import HistoryIcon from '@mui/icons-material/History';
 import ErrorSnackbar from '../../components/ErrorSnackbar';
 import useInventoryState from '../../hooks/useInventoryState';
 import ConfirmAlertDialog from '../../components/ConfirmAlertDialog';
+import DialogProductForm from './DialogProductForm';
 
 const columns = [
   { field: 'id', headerName: 'ID', flex: 1, hide: true },
@@ -64,31 +62,28 @@ const columns = [
   },
 ];
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
 export default function Inventory() {
   const {
     rows,
     deleteProduct,
-    saveProduct,
     handleDialogOpen,
-    handleDialogClose,
-    inputChange,
-    openDialog,
-    formErrors,
     openSnackbar,
     snackbarMessage,
     handleSnackbarClose,
-    saving,
     editRow,
-    formValues,
+    openDialog,
+    handleDialogClose,
     openAlert,
     handleAlertClose,
     confirmDelete,
     confirmAlertTitle,
     confirmAlertMessage,
+    formValues,
+    saving,
+    formErrors,
+    inputChange,
+    saveProduct,
+    isUpdate,
   } = useInventoryState();
 
   const [pageSize, setPageSize] = React.useState(5);
@@ -142,93 +137,17 @@ export default function Inventory() {
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
         />
       </div>
-      <div>
-        <Dialog
-          fullScreen
+      <>
+        <DialogProductForm
           open={openDialog}
           onClose={handleDialogClose}
-          TransitionComponent={Transition}
-        >
-          <AppBar sx={{ position: 'relative' }}>
-            <Toolbar>
-              <IconButton
-                edge="start"
-                color="inherit"
-                onClick={handleDialogClose}
-                aria-label="close"
-              >
-                <CloseIcon />
-              </IconButton>
-              <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
-                Add new product
-              </Typography>
-              <LoadingButton
-                loading={saving}
-                autoFocus
-                color="inherit"
-                onClick={saveProduct}
-                startIcon={<SaveIcon />}
-              >
-                save
-              </LoadingButton>
-            </Toolbar>
-          </AppBar>
-          <DialogContent>
-            <TextField
-              required
-              autoFocus
-              error={!!formErrors['name']}
-              helperText={formErrors['name']}
-              margin="normal"
-              id="name"
-              label="Name"
-              type="text"
-              fullWidth
-              variant="outlined"
-              onChange={inputChange}
-              value={formValues.name}
-            />
-            <TextField
-              required
-              error={!!formErrors['pricePerUnit']}
-              helperText={formErrors['pricePerUnit']}
-              margin="normal"
-              id="pricePerUnit"
-              label="Price per unit"
-              type="number"
-              fullWidth
-              variant="outlined"
-              onChange={inputChange}
-              value={formValues.pricePerUnit}
-            />
-            <TextField
-              required
-              error={!!formErrors['quantity']}
-              helperText={formErrors['quantity']}
-              margin="normal"
-              id="quantity"
-              label="Quantity"
-              type="number"
-              fullWidth
-              variant="outlined"
-              onChange={inputChange}
-              value={formValues.quantity}
-            />
-            <TextField
-              required
-              error={!!formErrors['unit']}
-              helperText={formErrors['unit']}
-              margin="normal"
-              id="unit"
-              label="Unit"
-              type="text"
-              fullWidth
-              variant="outlined"
-              onChange={inputChange}
-              value={formValues.unit}
-            />
-          </DialogContent>
-        </Dialog>
+          formValues={formValues}
+          saving={saving}
+          formErrors={formErrors}
+          inputChange={inputChange}
+          saveProduct={saveProduct}
+          isUpdate={isUpdate}
+        />
         <ErrorSnackbar
           open={openSnackbar}
           onClose={handleSnackbarClose}
@@ -241,7 +160,7 @@ export default function Inventory() {
           onConfirm={deleteProduct}
           message={confirmAlertMessage}
         />
-      </div>
+      </>
     </>
   );
 }

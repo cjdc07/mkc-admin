@@ -65,6 +65,7 @@ const useInventoryState = () => {
     setSnackbarMessage(null);
     setFormValues(defaultFormValues);
     setFormErrors({});
+    setIsUpdate(false);
   };
 
   const confirmDelete = async (e, params) => {
@@ -91,6 +92,12 @@ const useInventoryState = () => {
 
   const saveProduct = async () => {
     setSaving(true);
+
+    Object.keys(formValues).forEach((key) => {
+      if (typeof formValues[key] === 'string') {
+        formValues[key] = formValues[key].trim();
+      }
+    });
 
     const errors = Object.keys(formValues).reduce((acc, key) => {
       if (!formValues[key] || formValues[key] === '') {
@@ -179,6 +186,7 @@ const useInventoryState = () => {
     confirmDelete,
     confirmAlertTitle,
     confirmAlertMessage,
+    isUpdate,
   }
 }
 
