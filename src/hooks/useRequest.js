@@ -11,7 +11,7 @@ const useRequest = () => ({
       })
     ),
 
-  getList: (resource, params) => {
+  getList: async (resource, params) => {
     const { page, perPage } = params.pagination;
     const { field, order } = params.sort;
     const query = {
@@ -21,13 +21,13 @@ const useRequest = () => ({
     };
     const url = `${apiUrl}/${resource}?${stringify(query)}`;
 
-    return fetch(url)
-      .then(response => response.json())
-      .then(({data, total}) => ({
-        data,
-        total,
-      })
-    );
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      throw new Error(`An error occured: ${response.status} ${response.statusText}`);
+    }
+
+    return await response.json();
   },
 
   create: async (resource, data) => {
@@ -68,7 +68,6 @@ const useRequest = () => ({
     });
 
     if (!response.ok) {
-      console.log('not ok')
       throw new Error(`An error occured: ${response.status} ${response.statusText}`);
     }
   },

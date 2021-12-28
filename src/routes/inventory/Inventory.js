@@ -9,6 +9,7 @@ import ErrorSnackbar from '../../components/ErrorSnackbar';
 import useInventoryState from '../../hooks/useInventoryState';
 import ConfirmAlertDialog from '../../components/ConfirmAlertDialog';
 import DialogProductForm from './DialogProductForm';
+import ProductHistoryDrawer from './ProductChangeHistory';
 
 const columns = [
   { field: 'id', headerName: 'ID', flex: 1, hide: true },
@@ -70,7 +71,7 @@ export default function Inventory() {
     openSnackbar,
     snackbarMessage,
     handleSnackbarClose,
-    editRow,
+    editProduct,
     openDialog,
     handleDialogClose,
     openAlert,
@@ -84,6 +85,11 @@ export default function Inventory() {
     inputChange,
     saveProduct,
     isUpdate,
+    showProductChangeHistory,
+    openDrawer,
+    handleDrawerClose,
+    currentRow,
+    loading,
   } = useInventoryState();
 
   const [pageSize, setPageSize] = React.useState(5);
@@ -95,14 +101,14 @@ export default function Inventory() {
     width: 150,
     getActions: (params) => [
       <IconButton
-        onClick={(e) => console.log('show history')}
+        onClick={(e) => showProductChangeHistory(e, params)}
         color="primary"
         aria-label="show-history"
       >
         <HistoryIcon />
       </IconButton>,
       <IconButton
-        onClick={(e) => editRow(e, params)}
+        onClick={(e) => editProduct(e, params)}
         color="primary"
         aria-label="edit"
       >
@@ -135,9 +141,17 @@ export default function Inventory() {
           pageSize={pageSize}
           rowsPerPageOptions={[5, 10, 20]}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          loading={loading}
         />
       </div>
       <>
+        {(openDrawer && currentRow) && (
+          <ProductHistoryDrawer
+            open={openDrawer}
+            onClose={handleDrawerClose}
+            product={currentRow}
+          />
+        )}
         <DialogProductForm
           open={openDialog}
           onClose={handleDialogClose}

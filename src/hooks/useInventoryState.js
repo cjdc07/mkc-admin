@@ -12,32 +12,42 @@ const useInventoryState = () => {
   const { getList, create, deleteOne, update } = useRequest();
   const [rows, setRows] = React.useState([]);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [snackbarMessage, setSnackbarMessage] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [openAlert, setOpenAlert] = React.useState(false);
-  const [snackbarMessage, setSnackbarMessage] = React.useState(null);
+  const [confirmAlertTitle, setConfirmAlertTitle] = React.useState(null);
+  const [confirmAlertMessage, setConfirmAlertMessage] = React.useState(null);
+  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const [currentRow, setCurrentRow] = React.useState(null);
   const [formValues, setFormValues] = React.useState(defaultFormValues);
   const [formErrors, setFormErrors] = React.useState({});
   const [saving, setSaving] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const [isUpdate, setIsUpdate] = React.useState(false);
-  const [currentRow, setCurrentRow] = React.useState(null);
-  const [confirmAlertTitle, setConfirmAlertTitle] = React.useState(null);
-  const [confirmAlertMessage, setConfirmAlertMessage] = React.useState(null);
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const {data} = await getList('products', {
-        pagination: {
-          page: 1,
-          perPage: 10,
-        },
-        sort: {
-          field: 'id',
-          order: 'ASC',
-        },
-        filter: {},
-      });
+      try {
+        const {data} = await getList('products', {
+          pagination: {
+            page: 1,
+            perPage: 10,
+          },
+          sort: {
+            field: 'id',
+            order: 'ASC',
+          },
+          filter: {},
+        });
 
-      setRows(data);
+        setRows(data);
+        setLoading(false);
+      } catch (error) {
+        setSnackbarMessage(error.message);
+        setOpenSnackbar(true);
+      } finally {
+        setLoading(false);
+      }
     }
 
     fetchData();
@@ -50,6 +60,13 @@ const useInventoryState = () => {
 
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
+  };
+
+  const handleDrawerClose = () => {
+    setOpenSnackbar(false);
+    setSnackbarMessage(null);
+    setCurrentRow(null);
+    setOpenDrawer(false);
   };
 
   const handleAlertClose = () => {
@@ -137,7 +154,7 @@ const useInventoryState = () => {
     }
   }
 
-  const editRow = async (e, params) => {
+  const editProduct = async (e, params) => {
     e.stopPropagation();
     const { row } = params;
     setFormValues({
@@ -149,6 +166,12 @@ const useInventoryState = () => {
     });
     setIsUpdate(true);
     handleDialogOpen();
+  }
+
+  const showProductChangeHistory = async (e, params) => {
+    e.stopPropagation();
+    setCurrentRow(params.row);
+    setOpenDrawer(true);
   }
 
   const inputChange = (e) => {
@@ -180,13 +203,18 @@ const useInventoryState = () => {
     snackbarMessage,
     handleSnackbarClose,
     saving,
-    editRow,
+    editProduct,
     openAlert,
     handleAlertClose,
     confirmDelete,
     confirmAlertTitle,
     confirmAlertMessage,
     isUpdate,
+    showProductChangeHistory,
+    openDrawer,
+    handleDrawerClose,
+    currentRow,
+    loading,
   }
 }
 
