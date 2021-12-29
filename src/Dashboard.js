@@ -13,7 +13,7 @@ import InventoryIcon from '@mui/icons-material/Inventory';
 import PeopleIcon from '@mui/icons-material/People';
 import { Link, Route, Routes } from 'react-router-dom';
 import Inventory from './routes/inventory/Inventory';
-import Users from './routes/Users';
+import Users from './routes/users/Users';
 
 const drawerWidth = 240;
 
