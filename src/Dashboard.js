@@ -11,13 +11,15 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PeopleIcon from '@mui/icons-material/People';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import Inventory from './routes/inventory/Inventory';
 import Users from './routes/users/Users';
 
 const drawerWidth = 240;
 
 export default function Dashboard() {
+  const { pathname } = useLocation();
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -39,18 +41,28 @@ export default function Dashboard() {
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           <List>
-            <Link to="/inventory" style={{ textDecoration: 'none', color: 'black' }}>
+            <Link
+              to="/inventory"
+              style={{
+                textDecoration: 'none',
+                color: pathname === '/inventory' ? '#1976d2' : 'black'
+              }}>
               <ListItem button key="Inventory">
                 <ListItemIcon>
-                  <InventoryIcon />
+                  <InventoryIcon color={pathname === '/inventory' ? 'primary' : 'inherit'}/>
                 </ListItemIcon>
                 <ListItemText primary="Inventory" />
               </ListItem>
             </Link>
-            <Link to="/users" style={{ textDecoration: 'none', color: 'black' }}>
+            <Link
+              to="/users"
+              style={{
+                textDecoration: 'none',
+                color: pathname === '/users' ? '#1976d2' : 'black'
+              }}>
               <ListItem button key="Users">
                 <ListItemIcon>
-                  <PeopleIcon />
+                  <PeopleIcon color={pathname === '/users' ? 'primary' : 'inherit'}/>
                 </ListItemIcon>
                 <ListItemText primary="Users" />
               </ListItem>
