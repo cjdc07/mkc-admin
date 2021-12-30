@@ -1,24 +1,27 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
 import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
-import Toolbar from '@mui/material/Toolbar';
+import Drawer from '@mui/material/Drawer';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InventoryIcon from '@mui/icons-material/Inventory';
 import PeopleIcon from '@mui/icons-material/People';
-import { Link, Route, Routes, useLocation } from 'react-router-dom';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+
 import Inventory from './routes/inventory/Inventory';
 import Users from './routes/users/Users';
+import { UserContext } from './contexts/UserContext';
 
 const drawerWidth = 240;
 
 export default function Dashboard() {
   const { pathname } = useLocation();
+  const { user } = React.useContext(UserContext);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -75,6 +78,10 @@ export default function Dashboard() {
         <Routes>
           <Route path="inventory" element={<Inventory />} />
           <Route path="users" element={<Users />} />
+          <Route
+            path="*"
+            element={<Navigate to="inventory" />}
+          />
         </Routes>
       </Box>
     </Box>
