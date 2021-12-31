@@ -16,6 +16,7 @@ import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Inventory from './routes/inventory/Inventory';
 import Users from './routes/users/Users';
 import { UserContext } from './contexts/UserContext';
+import { USER_ROLES } from './constants';
 
 const drawerWidth = 240;
 
@@ -57,19 +58,21 @@ export default function Dashboard() {
                 <ListItemText primary="Inventory" />
               </ListItem>
             </Link>
-            <Link
-              to="/users"
-              style={{
-                textDecoration: 'none',
-                color: pathname === '/users' ? '#1976d2' : 'black'
-              }}>
-              <ListItem button key="Users">
-                <ListItemIcon>
-                  <PeopleIcon color={pathname === '/users' ? 'primary' : 'inherit'}/>
-                </ListItemIcon>
-                <ListItemText primary="Users" />
-              </ListItem>
-            </Link>
+            {user.role === USER_ROLES.OWNER && (
+              <Link
+                to="/users"
+                style={{
+                  textDecoration: 'none',
+                  color: pathname === '/users' ? '#1976d2' : 'black'
+                }}>
+                <ListItem button key="Users">
+                  <ListItemIcon>
+                    <PeopleIcon color={pathname === '/users' ? 'primary' : 'inherit'}/>
+                  </ListItemIcon>
+                  <ListItemText primary="Users" />
+                </ListItem>
+              </Link>
+            )}
           </List>
         </Box>
       </Drawer>
@@ -77,7 +80,9 @@ export default function Dashboard() {
         <Toolbar />
         <Routes>
           <Route path="inventory" element={<Inventory />} />
-          <Route path="users" element={<Users />} />
+          {user.role === USER_ROLES.OWNER &&
+            <Route path="users" element={<Users />} />
+          }
           <Route
             path="*"
             element={<Navigate to="inventory" />}

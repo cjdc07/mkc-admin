@@ -10,6 +10,8 @@ import useInventoryState from '../../hooks/useInventoryState';
 import ConfirmAlertDialog from '../../components/ConfirmAlertDialog';
 import DialogProductForm from './DialogProductForm';
 import ProductHistoryDrawer from './ProductChangeHistory';
+import { UserContext } from '../../contexts/UserContext';
+import { USER_ROLES } from '../../constants';
 
 const columns = [
   { field: 'id', headerName: 'ID', flex: 1, hide: true },
@@ -93,13 +95,10 @@ export default function Inventory() {
   } = useInventoryState();
 
   const [pageSize, setPageSize] = React.useState(5);
+  const { user } = React.useContext(UserContext);
 
-  const actionColumn = {
-    field: 'action',
-    headerName: 'Actions',
-    type: 'actions',
-    width: 150,
-    getActions: (params) => [
+  const renderActions = (params) => {
+    const actions = [
       <IconButton
         onClick={(e) => showProductChangeHistory(e, params)}
         color="primary"
@@ -107,21 +106,41 @@ export default function Inventory() {
       >
         <HistoryIcon />
       </IconButton>,
-      <IconButton
-        onClick={(e) => editProduct(e, params)}
-        color="primary"
-        aria-label="edit"
-      >
+    ];
+
+    if ([USER_ROLES.OWNER, USER_ROLES.EDITOR].includes(user.role)) {
+      actions.push(
+        <IconButton
+          onClick={(e) => editProduct(e, params)}
+          color="primary"
+          aria-label="edit"
+        >
         <EditIcon />
-      </IconButton>,
-      <IconButton
-        onClick={(e) => confirmDelete(e, params)}
-        color="error"
-        aria-label="delete"
-      >
-        <DeleteIcon />
-      </IconButton>,
-    ],
+      </IconButton>
+      );
+    }
+
+    if (user.role === USER_ROLES.OWNER) {
+      actions.push(
+        <IconButton
+          onClick={(e) => confirmDelete(e, params)}
+          color="error"
+          aria-label="delete"
+        >
+          <DeleteIcon />
+        </IconButton>
+      );
+    }
+
+    return actions
+  }
+
+  const actionColumn = {
+    field: 'action',
+    headerName: 'Actions',
+    type: 'actions',
+    width: 150,
+    getActions: (params) => renderActions(params),
   };
 
   return (
@@ -130,11 +149,14 @@ export default function Inventory() {
         <Box sx={{display: 'inline-flex', width: '50%'}}>
           <h2>Inventory</h2>
         </Box>
-        <Box sx={{display: 'inline-flex', width: '50%', justifyContent: 'flex-end'}}>
-          <Button variant="outlined" startIcon={<AddIcon />} onClick={handleDialogOpen}>
-            New Product
-          </Button>
-        </Box>
+        {[USER_ROLES.OWNER, USER_ROLES.EDITOR].includes(user.role) && (
+          <Box sx={{display: 'inline-flex', width: '50%', justifyContent: 'flex-end'}}>
+            
+            <Button variant="outlined" startIcon={<AddIcon />} onClick={handleDialogOpen}>
+              New Product
+            </Button>
+          </Box>
+        )}
         <DataGrid
           rows={rows}
           columns={[...columns, actionColumn]}
