@@ -2,6 +2,7 @@
 FROM node:14-alpine as react-build
 WORKDIR /app
 COPY . ./
+RUN ls -a
 RUN yarn
 RUN yarn build
 
