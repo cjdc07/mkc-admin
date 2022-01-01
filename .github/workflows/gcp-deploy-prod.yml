@@ -14,17 +14,6 @@ jobs:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
       REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
     steps:
-    - name: Create env file
-      run: |
-        echo REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} > .env.production
-        echo REACT_APP_TEST_ENV=TEST >> .env.production
-
-    - name: Show file content
-      run: |
-        pwd
-        ls -la
-        cat .env.production
-
     - name: Login
       uses: google-github-actions/setup-gcloud@master
       with:
@@ -37,6 +26,11 @@ jobs:
 
     - name: Checkout repository
       uses: actions/checkout@v2
+
+    - name: Create env file
+      run: |
+        echo REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} > .env.production
+        echo REACT_APP_TEST_ENV=TEST >> .env.production
 
     - name: Build Docker image
       run: docker build . -t $IMAGE_NAME
