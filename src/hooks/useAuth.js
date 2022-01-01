@@ -12,6 +12,9 @@ const useAuth = () => ({
 
     if (!response.ok) {
       const { message, statusCode } = await response.json();
+      if (statusCode === 401) {
+        throw new Error(`Invalid username or password.`);
+      }
       throw new Error(`An error occured: ${message} (${statusCode})`);
     }
 

@@ -125,7 +125,6 @@ const DialogUserForm = ({
         fullWidth
         variant="outlined"
         onChange={inputChange}
-        value={formValues['password']}
       />
       <FormControl
         required

@@ -17,7 +17,6 @@ const columns = [
   { field: 'username', headerName: 'Username', flex: 1 },
   { field: 'firstName', headerName: 'First Name', flex: 1 },
   { field: 'lastName', headerName: 'Last Name', flex: 1 },
-  { field: 'password', headerName: 'Password', flex: 1 },
   { field: 'role', headerName: 'Role', flex: 1 },
   { field: 'active', headerName: 'Is Active', flex: 1, type: 'boolean' },
 ];
