@@ -15,12 +15,9 @@ jobs:
       REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
     steps:
     - name: Create env file
-      uses: DamianReeves/write-file-action
-      with:
-        path: ${{ env.home}}/.env.production
-        contents: |
-          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}"
-        write-mode: overwrite
+      run: |
+        echo REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }} > .env.production
+        echo REACT_APP_TEST_ENV=TEST >> .env.production
 
     - name: Login
       uses: google-github-actions/setup-gcloud@master
