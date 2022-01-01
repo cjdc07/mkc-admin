@@ -4,8 +4,11 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Box, Button, IconButton } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import * as React from 'react';
+import { Navigate } from 'react-router-dom';
 import ConfirmAlertDialog from '../../components/ConfirmAlertDialog';
 import ErrorSnackbar from '../../components/ErrorSnackbar';
+import { USER_ROLES } from '../../constants';
+import { UserContext } from '../../contexts/UserContext';
 import useUsersState from '../../hooks/useUsersState';
 import DialogUserForm from './DialogUserForm';
 
@@ -44,6 +47,15 @@ export default function Users() {
     loading,
   } = useUsersState();
   const [pageSize, setPageSize] = React.useState(5);
+  const { user } = React.useContext(UserContext);
+
+  if (!user) {
+    return <Navigate to="/login" />
+  }
+
+  if (user.role !== USER_ROLES.OWNER) {
+    return <Navigate to="/inventory" />
+  }
 
   const actionColumn = {
     field: 'action',

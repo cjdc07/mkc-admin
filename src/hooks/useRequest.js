@@ -4,7 +4,12 @@ const apiUrl = process.env.REACT_APP_API_URL;
 
 const useRequest = () => ({
   getOne: (resource, params) =>
-    fetch(`${apiUrl}/${resource}/${params.id}`)
+    fetch(`${apiUrl}/${resource}/${params.id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    })
       .then(response => response.json())
       .then((data) => ({
         data,
@@ -21,7 +26,12 @@ const useRequest = () => ({
     };
     const url = `${apiUrl}/${resource}?${stringify(query)}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`An error occured: ${response.status} ${response.statusText}`);
@@ -35,6 +45,7 @@ const useRequest = () => ({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
       },
       body: JSON.stringify(data),
     });
@@ -51,6 +62,7 @@ const useRequest = () => ({
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
       },
       body: JSON.stringify(data),
     });
@@ -65,21 +77,16 @@ const useRequest = () => ({
   deleteOne: async (resource, params) => {
     const response = await fetch(`${apiUrl}/${resource}/${params.id}`, {
       method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+      },
     });
 
     if (!response.ok) {
       throw new Error(`An error occured: ${response.status} ${response.statusText}`);
     }
   },
-
-  // deleteMany: (resource, params) => {
-  //   const query = {
-  //     filter: JSON.stringify({ id: params.ids }),
-  //   };
-  //   return httpClient(`${apiUrl}/${resource}?${stringify(query)}`, {
-  //     method: 'DELETE',
-  //   }).then(({ json }) => ({ data: json }));
-  // },
 });
 
 export default useRequest;

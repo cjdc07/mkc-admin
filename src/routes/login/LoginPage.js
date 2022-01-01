@@ -6,9 +6,10 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 
 import useLoginPageState from '../../hooks/useLoginPageState';
 import { UserContext } from '../../contexts/UserContext';
+import { Navigate } from 'react-router-dom';
 
 
-const LoginPage = ({setIsLoggedIn}) => {
+const LoginPage = () => {
   const {
     formErrors,
     inputChange,
@@ -19,7 +20,12 @@ const LoginPage = ({setIsLoggedIn}) => {
     handleSnackbarClose,
   } = useLoginPageState();
 
-  const { setUser } = React.useContext(UserContext);
+  const { user, setUser } = React.useContext(UserContext);
+
+  if (user) {
+    // TODO: Navigate to page where user was trying to access
+    return <Navigate to="/inventory" />
+  }
 
   return (
     <>
@@ -72,10 +78,10 @@ const LoginPage = ({setIsLoggedIn}) => {
             variant="contained"
             style={{ width: '320px', marginTop: '16px' }}
             onClick={async () => {
-              const user = await onLogin();
+              const {access_token, user} = await onLogin();
               if (user) {
                 setUser(user);
-                setIsLoggedIn(true);
+                localStorage.setItem('access_token', access_token);
               }
             }}
           >

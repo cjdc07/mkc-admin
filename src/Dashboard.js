@@ -11,10 +11,8 @@ import ListItemText from '@mui/material/ListItemText';
 import PeopleIcon from '@mui/icons-material/People';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { Link, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
 
-import Inventory from './routes/inventory/Inventory';
-import Users from './routes/users/Users';
 import { UserContext } from './contexts/UserContext';
 import { USER_ROLES } from './constants';
 
@@ -23,6 +21,10 @@ const drawerWidth = 240;
 export default function Dashboard() {
   const { pathname } = useLocation();
   const { user } = React.useContext(UserContext);
+
+  if (!user) {
+    return <Navigate to="/login" />
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -78,16 +80,7 @@ export default function Dashboard() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar />
-        <Routes>
-          <Route path="inventory" element={<Inventory />} />
-          {user.role === USER_ROLES.OWNER &&
-            <Route path="users" element={<Users />} />
-          }
-          <Route
-            path="*"
-            element={<Navigate to="inventory" />}
-          />
-        </Routes>
+        <Outlet />
       </Box>
     </Box>
   );
