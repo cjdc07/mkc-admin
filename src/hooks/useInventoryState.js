@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import useRequest from '../hooks/useRequest';
 
 const defaultFormValues = {
@@ -43,10 +44,11 @@ const useInventoryState = () => {
         setRows(data);
         setLoading(false);
       } catch (error) {
-        setSnackbarMessage(error.message);
-        setOpenSnackbar(true);
-      } finally {
-        setLoading(false);
+        if (error.statusCode !== 401) {
+          setSnackbarMessage(error.message);
+          setOpenSnackbar(true);
+          setLoading(false);
+        }
       }
     }
 
@@ -99,11 +101,13 @@ const useInventoryState = () => {
       const { id } = currentRow;
       const updatedRows = rows.filter((product) => product.id !== id);
       setRows(updatedRows);
+      handleAlertClose();
     } catch (error) {
-      setSnackbarMessage(error.message);
-      setOpenSnackbar(true);
-    } finally {
-      handleAlertClose()
+      if (error.statusCode !== 401) {
+        setSnackbarMessage(error.message);
+        setOpenSnackbar(true);
+        handleAlertClose();
+      }
     }
   };
 
@@ -143,13 +147,18 @@ const useInventoryState = () => {
         setRows([...rows, product]);
       }
       handleDialogClose();
-    } catch (error) {
-      setSnackbarMessage(error.message);
-      setOpenSnackbar(true);
-    } finally {
       setSaving(false);
       if (isUpdate) {
         setIsUpdate(false);
+      }
+    } catch (error) {
+      if (error.statusCode !== 401) {
+        setSnackbarMessage(error.message);
+        setOpenSnackbar(true);
+        setSaving(false);
+        if (isUpdate) {
+          setIsUpdate(false);
+        }
       }
     }
   }

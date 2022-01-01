@@ -5,6 +5,8 @@ import { Timeline, TimelineConnector, TimelineContent, TimelineDot, TimelineItem
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
 import ErrorSnackbar from '../../components/ErrorSnackbar';
 import useProductChangeHistory from '../../hooks/useProductChangeHistory';
+import { UserContext } from '../../contexts/UserContext';
+import { Navigate } from 'react-router-dom';
 
 const ProductChangeHistory = ({ open, onClose, product }) => {
   const {
@@ -14,6 +16,12 @@ const ProductChangeHistory = ({ open, onClose, product }) => {
     handleSnackbarClose,
     snackbarMessage,
   } = useProductChangeHistory(product.id);
+
+  const { user } = React.useContext(UserContext);
+
+  if (!user) {
+    return <Navigate to="/login" />
+  }
 
   return ( 
     <>      

@@ -44,10 +44,11 @@ const useUsersState = () => {
         setRows(data);
         setLoading(false);
       } catch (error) {
-        setSnackbarMessage(error.message);
-        setOpenSnackbar(true);
-      } finally {
-        setLoading(false);
+        if (error.statusCode !== 401) {
+          setSnackbarMessage(error.message);
+          setOpenSnackbar(true);
+          setLoading(false);
+        }
       }
     }
 
@@ -127,13 +128,15 @@ const useUsersState = () => {
         setRows([...rows, product]);
       }
       handleDialogClose();
-    } catch (error) {
-      setSnackbarMessage(error.message);
-      setOpenSnackbar(true);
-    } finally {
       setSaving(false);
-      if (isUpdate) {
-        setIsUpdate(false);
+    } catch (error) {
+      if (error.statusCode !== 401) {
+        setSnackbarMessage(error.message);
+        setOpenSnackbar(true);
+        setSaving(false);
+        if (isUpdate) {
+          setIsUpdate(false);
+        }
       }
     }
   }
@@ -160,11 +163,13 @@ const useUsersState = () => {
       const { id } = currentRow;
       const updatedRows = rows.filter((product) => product.id !== id);
       setRows(updatedRows);
+      handleAlertClose();
     } catch (error) {
-      setSnackbarMessage(error.message);
-      setOpenSnackbar(true);
-    } finally {
-      handleAlertClose()
+      if (error.statusCode !== 401) {
+        setSnackbarMessage(error.message);
+        setOpenSnackbar(true);
+        handleAlertClose();
+      }
     }
   };
 

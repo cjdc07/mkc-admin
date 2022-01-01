@@ -12,6 +12,7 @@ import DialogProductForm from './DialogProductForm';
 import ProductHistoryDrawer from './ProductChangeHistory';
 import { UserContext } from '../../contexts/UserContext';
 import { USER_ROLES } from '../../constants';
+import { Navigate } from 'react-router-dom';
 
 const columns = [
   { field: 'id', headerName: 'ID', flex: 1, hide: true },
@@ -96,6 +97,10 @@ export default function Inventory() {
 
   const [pageSize, setPageSize] = React.useState(5);
   const { user } = React.useContext(UserContext);
+
+  if (!user) {
+    return <Navigate to="/login" />
+  }
 
   const renderActions = (params) => {
     const actions = [

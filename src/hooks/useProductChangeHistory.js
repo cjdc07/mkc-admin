@@ -28,10 +28,11 @@ const useProductChangeHistory = (productId) => {
         setChangeHistory(data);
         setLoading(false);
       } catch (error) {
-        setSnackbarMessage(error.message);
-        setOpenSnackbar(true);
-      } finally {
-        setLoading(false);
+        if (error.statusCode !== 401) {
+          setSnackbarMessage(error.message);
+          setOpenSnackbar(true);
+          setLoading(false);
+        }
       }
     }
 
