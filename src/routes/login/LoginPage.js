@@ -78,10 +78,10 @@ const LoginPage = () => {
             variant="contained"
             style={{ width: '320px', marginTop: '16px' }}
             onClick={async () => {
-              const {access_token, user} = await onLogin();
-              if (user) {
-                setUser(user);
-                localStorage.setItem('access_token', access_token);
+              const response = await onLogin();
+              if (response && response.user && response.access_token) {
+                setUser(response.user);
+                localStorage.setItem('access_token', response.access_token);
               }
             }}
           >
