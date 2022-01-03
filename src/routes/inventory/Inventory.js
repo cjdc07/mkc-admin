@@ -93,9 +93,13 @@ export default function Inventory() {
     handleDrawerClose,
     currentRow,
     loading,
+    page,
+    changePage,
+    pageSize,
+    changePageSize,
+    total,
   } = useInventoryState();
 
-  const [pageSize, setPageSize] = React.useState(5);
   const { user } = React.useContext(UserContext);
 
   if (!user) {
@@ -163,12 +167,16 @@ export default function Inventory() {
           </Box>
         )}
         <DataGrid
+          page={page}
           rows={rows}
           columns={[...columns, actionColumn]}
           pageSize={pageSize}
           rowsPerPageOptions={[5, 10, 20]}
-          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+          onPageChange={changePage}
+          onPageSizeChange={changePageSize}
           loading={loading}
+          rowCount={total}
+          paginationMode='server'
         />
       </div>
       <>

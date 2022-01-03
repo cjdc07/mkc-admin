@@ -9,8 +9,14 @@ const defaultFormValues = {
   unit: '',
 };
 
+const DEFAULT_PAGE_SIZE = 5;
+const DEFAULT_PAGE = 0;
+
 const useInventoryState = () => {
   const { getList, create, deleteOne, update } = useRequest();
+  const [total, setTotal] = React.useState(0);
+  const [page, setPage] = React.useState(DEFAULT_PAGE);
+  const [pageSize, setPageSize] = React.useState(DEFAULT_PAGE_SIZE);
   const [rows, setRows] = React.useState([]);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState(null);
@@ -27,34 +33,39 @@ const useInventoryState = () => {
   const [isUpdate, setIsUpdate] = React.useState(false);
 
   React.useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const {data} = await getList('products', {
-          pagination: {
-            page: 1,
-            perPage: 10,
-          },
-          sort: {
-            field: 'id',
-            order: 'ASC',
-          },
-          filter: {},
-        });
+    fetchList();
+  }, [page, pageSize]);
 
-        setRows(data);
+  const fetchList = async () => {
+    try {
+      const {data, total} = await getList('products', {
+        pagination: {
+          page,
+          perPage: pageSize,
+        },
+        sort: {
+          field: 'id',
+          order: 'ASC',
+        },
+        filter: {},
+      });
+
+      setRows(data);
+      setTotal(total);
+      setLoading(false);
+    } catch (error) {
+      if (error.statusCode !== 401) {
+        setSnackbarMessage(error.message);
+        setOpenSnackbar(true);
         setLoading(false);
-      } catch (error) {
-        if (error.statusCode !== 401) {
-          setSnackbarMessage(error.message);
-          setOpenSnackbar(true);
-          setLoading(false);
-        }
       }
     }
+  }
 
-    fetchData();
+  const changePage = (newPage) => setPage(newPage);
 
-  }, []);
+  const changePageSize = (newPageSize) =>
+    setPageSize(newPageSize);
 
   const handleDialogOpen = () => {
     setOpenDialog(true);
@@ -200,6 +211,11 @@ const useInventoryState = () => {
 
   return {
     rows,
+    page,
+    changePage,
+    pageSize,
+    changePageSize,
+    total,
     openDialog,
     deleteProduct,
     saveProduct,

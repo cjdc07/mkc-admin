@@ -28,7 +28,7 @@ const useRequest = () => {
       const { field, order } = params.sort;
       const query = {
         sort: JSON.stringify([field, order]),
-        range: JSON.stringify([(page - 1) * perPage, perPage]),
+        range: JSON.stringify([(page) * perPage, perPage]),
         filter: JSON.stringify(params.filter),
       };
       const url = `${apiUrl}/${resource}?${stringify(query)}`;
