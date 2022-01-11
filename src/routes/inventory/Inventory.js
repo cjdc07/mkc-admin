@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Box, Button, IconButton } from '@mui/material';
+import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -17,7 +17,24 @@ import { Navigate } from 'react-router-dom';
 const columns = [
   { field: 'id', headerName: 'ID', flex: 1, hide: true },
   { field: 'code', headerName: 'Product Code', flex: 1},
-  { field: 'name', headerName: 'Name', flex: 3 },
+  {
+    field: 'name',
+    headerName: 'Name',
+    flex: 3,
+    renderCell: (params) =>  {
+      console.log(params.row.name.length);
+      return (
+        <Tooltip
+          title={params.row.name}
+          placement="top"
+        >
+          <span className="table-cell-trucate">
+            {params.row.name.length > 30 ? `${params.row.name.substring(0,30)} ...` : params.row.name}
+          </span>
+        </Tooltip>
+      );
+    },
+  },
   {
     field: 'srp1',
     headerName: 'SRP1',
@@ -189,7 +206,7 @@ export default function Inventory() {
     field: 'action',
     headerName: 'Actions',
     type: 'actions',
-    flex: 1,
+    width: 150,
     getActions: (params) => renderActions(params),
   };
 
