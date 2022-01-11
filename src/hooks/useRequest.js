@@ -41,11 +41,20 @@ const useRequest = () => {
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
+        const error = await response.json();
+        let message = error.error;
+        let status = error.statusCode;
+
+        if (status === 401) {
           localStorage.removeItem('access_token');
           setUser(null);
         }
-        throw new HttpError(`An error occured: ${response.status} ${response.statusText}`, response.status);
+
+        if (status === 400) {
+          message = error.message;
+        }
+
+        throw new HttpError(`${message} (${status})`, status);
       }
 
       return await response.json();
@@ -62,12 +71,20 @@ const useRequest = () => {
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
+        const error = await response.json();
+        let message = error.error;
+        let status = error.statusCode;
+
+        if (status === 401) {
           localStorage.removeItem('access_token');
           setUser(null);
         }
-        const error = await response.json();
-        throw new HttpError(error.message, error.status);
+
+        if (status === 400) {
+          message = error.message;
+        }
+
+        throw new HttpError(`${message} (${status})`, status);
       }
 
       return await response.json();
@@ -84,11 +101,20 @@ const useRequest = () => {
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
+        const error = await response.json();
+        let message = error.error;
+        let status = error.statusCode;
+
+        if (status === 401) {
           localStorage.removeItem('access_token');
           setUser(null);
         }
-        throw new HttpError(`An error occured: ${response.status} ${response.statusText}`, response.status);
+
+        if (status === 400) {
+          message = error.message;
+        }
+
+        throw new HttpError(`${message} (${status})`, status);
       }
 
       return await response.json();
@@ -104,11 +130,20 @@ const useRequest = () => {
       });
 
       if (!response.ok) {
-        if (response.status === 401) {
+        const error = await response.json();
+        let message = error.error;
+        let status = error.statusCode;
+
+        if (status === 401) {
           localStorage.removeItem('access_token');
           setUser(null);
         }
-        throw new HttpError(`An error occured: ${response.status} ${response.statusText}`, response.status);
+
+        if (status === 400) {
+          message = error.message;
+        }
+
+        throw new HttpError(`${message} (${status})`, status);
       }
     },
   });

@@ -182,7 +182,7 @@ const useInventoryState = () => {
         setSnackbarMessage(error.message);
         setOpenSnackbar(true);
         setSaving(false);
-        if (isUpdate) {
+        if (isUpdate && error.statusCode !== 400) {
           setIsUpdate(false);
         }
       }
