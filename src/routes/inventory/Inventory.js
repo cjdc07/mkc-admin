@@ -17,7 +17,7 @@ import { Navigate } from 'react-router-dom';
 const columns = [
   { field: 'id', headerName: 'ID', flex: 1, hide: true },
   { field: 'code', headerName: 'Product Code', flex: 1},
-  { field: 'name', headerName: 'Name', flex: 1 },
+  { field: 'name', headerName: 'Name', flex: 3 },
   {
     field: 'srp1',
     headerName: 'SRP1',
