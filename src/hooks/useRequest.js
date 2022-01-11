@@ -66,7 +66,8 @@ const useRequest = () => {
           localStorage.removeItem('access_token');
           setUser(null);
         }
-        throw new HttpError(`An error occured: ${response.status} ${response.statusText}`, response.status);
+        const error = await response.json();
+        throw new HttpError(error.message, error.status);
       }
 
       return await response.json();

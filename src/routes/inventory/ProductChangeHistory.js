@@ -75,7 +75,7 @@ const ProductChangeHistory = ({ open, onClose, product }) => {
                 <TimelineContent>
                   <Stack spacing={1}>
                       {descriptions.map((description, index) =>
-                        <Typography variant="body2" component={'span'}>
+                        <Typography key={index} variant="body2" component={'span'}>
                           {description}
                         </Typography>
                       )}

@@ -61,6 +61,19 @@ const DialogProductForm = ({
       <TextField
         required
         autoFocus
+        error={!!formErrors['code']}
+        helperText={formErrors['code']}
+        margin="normal"
+        id="code"
+        label="Product Code"
+        type="text"
+        fullWidth
+        variant="outlined"
+        onChange={inputChange}
+        value={formValues.code}
+      />
+      <TextField
+        required
         error={!!formErrors['name']}
         helperText={formErrors['name']}
         margin="normal"
@@ -74,16 +87,55 @@ const DialogProductForm = ({
       />
       <TextField
         required
-        error={!!formErrors['pricePerUnit']}
-        helperText={formErrors['pricePerUnit']}
+        error={!!formErrors['srp1']}
+        helperText={formErrors['srp1']}
         margin="normal"
-        id="pricePerUnit"
-        label="Price per unit"
+        id="srp1"
+        label="SRP1"
         type="number"
         fullWidth
         variant="outlined"
         onChange={inputChange}
-        value={formValues.pricePerUnit}
+        value={formValues.srp1}
+      />
+      <TextField
+        required
+        error={!!formErrors['srp2']}
+        helperText={formErrors['srp2']}
+        margin="normal"
+        id="srp2"
+        label="SRP2"
+        type="number"
+        fullWidth
+        variant="outlined"
+        onChange={inputChange}
+        value={formValues.srp2}
+      />
+      <TextField
+        required
+        error={!!formErrors['wholesalePrice']}
+        helperText={formErrors['wholesalePrice']}
+        margin="normal"
+        id="wholesalePrice"
+        label="Wholesale Price"
+        type="number"
+        fullWidth
+        variant="outlined"
+        onChange={inputChange}
+        value={formValues.wholesalePrice}
+      />
+      <TextField
+        required
+        error={!!formErrors['distributorPrice']}
+        helperText={formErrors['distributorPrice']}
+        margin="normal"
+        id="distributorPrice"
+        label="Distributor Price"
+        type="number"
+        fullWidth
+        variant="outlined"
+        onChange={inputChange}
+        value={formValues.distributorPrice}
       />
       <TextField
         required

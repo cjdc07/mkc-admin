@@ -16,12 +16,46 @@ import { Navigate } from 'react-router-dom';
 
 const columns = [
   { field: 'id', headerName: 'ID', flex: 1, hide: true },
+  { field: 'code', headerName: 'Product Code', flex: 1},
   { field: 'name', headerName: 'Name', flex: 1 },
   {
-    field: 'pricePerUnit',
-    headerName: 'Price per unit',
+    field: 'srp1',
+    headerName: 'SRP1',
     type: 'number',
-    width: 125,
+    flex: 1,
+    filterable: false,
+    valueFormatter: ({value}) => new Intl.NumberFormat('en-PH', {
+      style: 'currency',
+      currency: 'PHP',
+    }).format(value),
+  },
+  {
+    field: 'srp2',
+    headerName: 'SRP2',
+    type: 'number',
+    flex: 1,
+    filterable: false,
+    valueFormatter: ({value}) => new Intl.NumberFormat('en-PH', {
+      style: 'currency',
+      currency: 'PHP',
+    }).format(value),
+  },
+  {
+    field: 'wholesalePrice',
+    headerName: 'Wholesale Price',
+    type: 'number',
+    flex: 1,
+    filterable: false,
+    valueFormatter: ({value}) => new Intl.NumberFormat('en-PH', {
+      style: 'currency',
+      currency: 'PHP',
+    }).format(value),
+  },
+  {
+    field: 'distributorPrice',
+    headerName: 'Distributor Price',
+    type: 'number',
+    flex: 1,
     filterable: false,
     valueFormatter: ({value}) => new Intl.NumberFormat('en-PH', {
       style: 'currency',
@@ -33,10 +67,12 @@ const columns = [
     headerName: 'Quantity',
     type: 'number',
     filterable: false,
+    flex: 1,
   },
   {
     field: 'unit',
     headerName: 'Unit',
+    flex: 1,
   },
   {
     field: 'createdAt',
@@ -51,6 +87,7 @@ const columns = [
         hour: 'numeric',
         minute: 'numeric'
       }),
+    hide: true,
   },
   {
     field: 'updatedAt',
@@ -65,6 +102,7 @@ const columns = [
         hour: 'numeric',
         minute: 'numeric'
       }),
+    hide: true,
   },
 ];
 
@@ -151,7 +189,7 @@ export default function Inventory() {
     field: 'action',
     headerName: 'Actions',
     type: 'actions',
-    width: 150,
+    flex: 1,
     getActions: (params) => renderActions(params),
   };
 

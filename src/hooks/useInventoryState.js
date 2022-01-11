@@ -3,8 +3,12 @@ import * as React from 'react';
 import useRequest from '../hooks/useRequest';
 
 const defaultFormValues = {
+  code: '',
   name: '',
-  pricePerUnit: 0,
+  srp1: 0,
+  srp2: 0,
+  wholesalePrice: 0,
+  distributorPrice: 0,
   quantity: 0,
   unit: '',
 };
@@ -143,7 +147,7 @@ const useInventoryState = () => {
     });
 
     const errors = Object.keys(formValues).reduce((acc, key) => {
-      if (!formValues[key] || formValues[key] === '') {
+      if (formValues[key] === '') {
         acc[key] = 'This field is required.';
       }
 
@@ -190,8 +194,12 @@ const useInventoryState = () => {
     const { row } = params;
     setFormValues({
       id: row.id,
+      code: row.code,
       name: row.name,
-      pricePerUnit: row.pricePerUnit,
+      srp1: row.srp1,
+      srp2: row.srp2,
+      wholesalePrice: row.wholesalePrice,
+      distributorPrice: row.distributorPrice,
       quantity: row.quantity,
       unit: row.unit,
     });

@@ -43,7 +43,7 @@ const useLoginPageState = () => {
     });
 
     const errors = Object.keys(formValues).reduce((acc, key) => {
-      if (!formValues[key] || formValues[key] === '') {
+      if (formValues[key] === '') {
         acc[key] = 'This field is required.';
       }
 
