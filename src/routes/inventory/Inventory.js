@@ -22,6 +22,7 @@ const columns = [
     headerName: 'Price per unit',
     type: 'number',
     width: 125,
+    filterable: false,
     valueFormatter: ({value}) => new Intl.NumberFormat('en-PH', {
       style: 'currency',
       currency: 'PHP',
@@ -31,6 +32,7 @@ const columns = [
     field: 'quantity',
     headerName: 'Quantity',
     type: 'number',
+    filterable: false,
   },
   {
     field: 'unit',
@@ -98,6 +100,7 @@ export default function Inventory() {
     pageSize,
     changePageSize,
     total,
+    onFilterChange,
   } = useInventoryState();
 
   const { user } = React.useContext(UserContext);
@@ -177,6 +180,8 @@ export default function Inventory() {
           loading={loading}
           rowCount={total}
           paginationMode='server'
+          filterMode="server"
+          onFilterModelChange={onFilterChange}
         />
       </div>
       <>

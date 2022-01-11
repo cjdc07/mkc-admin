@@ -17,6 +17,7 @@ const useInventoryState = () => {
   const [total, setTotal] = React.useState(0);
   const [page, setPage] = React.useState(DEFAULT_PAGE);
   const [pageSize, setPageSize] = React.useState(DEFAULT_PAGE_SIZE);
+  const [filter, setFilter] = React.useState({});
   const [rows, setRows] = React.useState([]);
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
   const [snackbarMessage, setSnackbarMessage] = React.useState(null);
@@ -29,14 +30,17 @@ const useInventoryState = () => {
   const [formValues, setFormValues] = React.useState(defaultFormValues);
   const [formErrors, setFormErrors] = React.useState({});
   const [saving, setSaving] = React.useState(false);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
   const [isUpdate, setIsUpdate] = React.useState(false);
 
   React.useEffect(() => {
     fetchList();
-  }, [page, pageSize]);
+  }, [page, pageSize, filter]);
 
   const fetchList = async () => {
+    setRows([]);
+    setLoading(true);
+
     try {
       const {data, total} = await getList('products', {
         pagination: {
@@ -47,7 +51,7 @@ const useInventoryState = () => {
           field: 'id',
           order: 'ASC',
         },
-        filter: {},
+        filter,
       });
 
       setRows(data);
@@ -60,6 +64,13 @@ const useInventoryState = () => {
         setLoading(false);
       }
     }
+  }
+
+  const onFilterChange = (filter) => {
+    // TODO: Only does one filter at a time
+    const { items } = filter;
+    const [{ columnField, value }] = items;
+    setFilter({ property: columnField, value });
   }
 
   const changePage = (newPage) => setPage(newPage);
@@ -240,6 +251,7 @@ const useInventoryState = () => {
     handleDrawerClose,
     currentRow,
     loading,
+    onFilterChange,
   }
 }
 

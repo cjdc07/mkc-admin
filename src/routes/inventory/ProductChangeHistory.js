@@ -52,7 +52,7 @@ const ProductChangeHistory = ({ open, onClose, product }) => {
           <>
             <h3 style={{marginBottom: 0}}>{product.name} Change History</h3>
             <Timeline>
-              {changeHistory.map(({id, changedBy, createdAt, createdFrom, description}, index) => (
+              {changeHistory.map(({id, changedBy, createdAt, createdFrom, descriptions}, index) => (
                 <TimelineItem key={id}>
                   <TimelineOppositeContent>
                   <Stack spacing={1}>
@@ -74,7 +74,11 @@ const ProductChangeHistory = ({ open, onClose, product }) => {
                 </TimelineSeparator>
                 <TimelineContent>
                   <Stack spacing={1}>
-                    <Typography variant="body2">{description}</Typography>
+                      {descriptions.map((description, index) =>
+                        <Typography variant="body2" component={'span'}>
+                          {description}
+                        </Typography>
+                      )}
                     <Typography variant="caption" color="text.secondary">{createdFrom}</Typography>
                   </Stack>
                   </TimelineContent>
