@@ -16,23 +16,46 @@ import { Navigate } from 'react-router-dom';
 
 const columns = [
   { field: 'id', headerName: 'ID', flex: 1, hide: true },
-  { field: 'code', headerName: 'Product Code', flex: 1},
+  {
+    field: 'code',
+    headerName: 'Code',
+    flex: 1,
+    renderCell: (params) =>  {
+      if (params.row.code.length > 10) {
+        return (
+          <Tooltip
+            title={params.row.code}
+            placement="top"
+          >
+            <span className="table-cell-trucate">
+              {`${params.row.code.substring(0,10)} ...`}
+            </span>
+          </Tooltip>
+        );
+      }
+
+      return params.row.code;
+    },
+  },
   {
     field: 'name',
     headerName: 'Name',
     flex: 3,
     renderCell: (params) =>  {
-      console.log(params.row.name.length);
-      return (
-        <Tooltip
-          title={params.row.name}
-          placement="top"
-        >
-          <span className="table-cell-trucate">
-            {params.row.name.length > 30 ? `${params.row.name.substring(0,30)} ...` : params.row.name}
-          </span>
-        </Tooltip>
-      );
+      if (params.row.name.length > 30) {
+        return (
+          <Tooltip
+            title={params.row.name}
+            placement="top"
+          >
+            <span className="table-cell-trucate">
+              {`${params.row.name.substring(0,30)} ...`}
+            </span>
+          </Tooltip>
+        );
+      }
+
+      return params.row.name;
     },
   },
   {
