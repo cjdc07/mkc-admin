@@ -38,7 +38,7 @@ const useInventoryState = () => {
   const [loading, setLoading] = React.useState(false);
   const [isUpdate, setIsUpdate] = React.useState(false);
 
-  const setFilterValue = (filter) => {console.log(filter); setFilter(filter);};
+  const setFilterValue = (filter) => setFilter(filter);
   const setFilterValueDebounced = React.useRef(_.debounce(setFilterValue, 500));
 
   React.useEffect(() => {
@@ -129,11 +129,9 @@ const useInventoryState = () => {
 
   const deleteProduct = async () => {
     try {
-      await deleteOne('products', currentRow);
-      const { id } = currentRow;
-      const updatedRows = rows.filter((product) => product.id !== id);
-      setRows(updatedRows);
       handleAlertClose();
+      await deleteOne('products', currentRow);
+      await fetchList()
     } catch (error) {
       if (error.statusCode !== 401) {
         setSnackbarMessage(error.message);
@@ -168,15 +166,12 @@ const useInventoryState = () => {
 
     try {
       if (isUpdate) {
-        const product = await update('products', formValues);
-        const index = rows.findIndex(({ id }) => id === product.id );
-        const updatedRow = [...rows];
-        updatedRow[index] = product;
-        setRows(updatedRow);
+        await update('products', formValues);
+        await fetchList();
         setIsUpdate(false);
       } else {
-        const product = await create('products', formValues);
-        setRows([...rows, product]);
+        await create('products', formValues);
+        await fetchList();
       }
       handleDialogClose();
       setSaving(false);

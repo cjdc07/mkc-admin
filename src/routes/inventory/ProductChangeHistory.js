@@ -50,7 +50,9 @@ const ProductChangeHistory = ({ open, onClose, product }) => {
           </Box>
         ) : (
           <>
-            <h3 style={{marginBottom: 0}}>{product.name} Change History</h3>
+            <Box pl={3}>
+              <h3>{product.name} Change History</h3>
+            </Box>
             <Timeline>
               {changeHistory.map(({id, changedBy, createdAt, createdFrom, descriptions}, index) => (
                 <TimelineItem key={id}>

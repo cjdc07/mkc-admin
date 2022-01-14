@@ -57,7 +57,7 @@ const DialogProductForm = ({
         </LoadingButton>
       </Toolbar>
     </AppBar>
-    <DialogContent>
+    <DialogContent sx={{paddingLeft: 8, paddingRight: 8}}>
       <TextField
         required
         autoFocus
