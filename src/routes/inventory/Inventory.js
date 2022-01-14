@@ -1,18 +1,20 @@
 import * as React from 'react';
-import { DataGrid } from '@mui/x-data-grid';
-import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import HistoryIcon from '@mui/icons-material/History';
-import ErrorSnackbar from '../../components/ErrorSnackbar';
-import useInventoryState from '../../hooks/useInventoryState';
+import { Box, Button, IconButton, Tooltip } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { Navigate } from 'react-router-dom';
+
 import ConfirmAlertDialog from '../../components/ConfirmAlertDialog';
 import DialogProductForm from './DialogProductForm';
+import ErrorSnackbar from '../../components/ErrorSnackbar';
 import ProductHistoryDrawer from './ProductChangeHistory';
+import QuickSearchToolbar from '../../components/QuickSearchToolbar';
+import useInventoryState from '../../hooks/useInventoryState';
 import { UserContext } from '../../contexts/UserContext';
 import { USER_ROLES } from '../../constants';
-import { Navigate } from 'react-router-dom';
 
 const columns = [
   { field: 'id', headerName: 'ID', flex: 1, hide: true },
@@ -63,7 +65,6 @@ const columns = [
     headerName: 'SRP1',
     type: 'number',
     flex: 1,
-    filterable: false,
     valueFormatter: ({value}) => new Intl.NumberFormat('en-PH', {
       style: 'currency',
       currency: 'PHP',
@@ -74,7 +75,6 @@ const columns = [
     headerName: 'SRP2',
     type: 'number',
     flex: 1,
-    filterable: false,
     valueFormatter: ({value}) => new Intl.NumberFormat('en-PH', {
       style: 'currency',
       currency: 'PHP',
@@ -85,7 +85,6 @@ const columns = [
     headerName: 'Wholesale Price',
     type: 'number',
     flex: 1,
-    filterable: false,
     valueFormatter: ({value}) => new Intl.NumberFormat('en-PH', {
       style: 'currency',
       currency: 'PHP',
@@ -96,7 +95,6 @@ const columns = [
     headerName: 'Distributor Price',
     type: 'number',
     flex: 1,
-    filterable: false,
     valueFormatter: ({value}) => new Intl.NumberFormat('en-PH', {
       style: 'currency',
       currency: 'PHP',
@@ -106,7 +104,6 @@ const columns = [
     field: 'quantity',
     headerName: 'Quantity',
     type: 'number',
-    filterable: false,
     flex: 1,
   },
   {
@@ -236,8 +233,16 @@ export default function Inventory() {
   return (
     <>
       <div style={{ height: 400, width: '100%' }}>
-        <Box sx={{display: 'inline-flex', width: '50%'}}>
-          <h2>Inventory</h2>
+        <h2>Inventory</h2>
+        <Box sx={{
+          display: 'inline-flex',
+          width: '50%',
+          paddingBottom: '16px',
+        }}>
+          <QuickSearchToolbar
+            onChange={onFilterChange}
+            placeholder={'Search product code or name ...'}
+          />
         </Box>
         {[USER_ROLES.OWNER, USER_ROLES.EDITOR].includes(user.role) && (
           <Box sx={{display: 'inline-flex', width: '50%', justifyContent: 'flex-end'}}>
@@ -248,6 +253,7 @@ export default function Inventory() {
           </Box>
         )}
         <DataGrid
+          disableColumnFilter
           page={page}
           rows={rows}
           columns={[...columns, actionColumn]}
@@ -258,8 +264,6 @@ export default function Inventory() {
           loading={loading}
           rowCount={total}
           paginationMode='server'
-          filterMode="server"
-          onFilterModelChange={onFilterChange}
         />
       </div>
       <>

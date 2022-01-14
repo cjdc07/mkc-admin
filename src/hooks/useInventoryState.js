@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as _ from 'lodash';
 
 import useRequest from '../hooks/useRequest';
 
@@ -37,6 +38,9 @@ const useInventoryState = () => {
   const [loading, setLoading] = React.useState(false);
   const [isUpdate, setIsUpdate] = React.useState(false);
 
+  const setFilterValue = (filter) => {console.log(filter); setFilter(filter);};
+  const setFilterValueDebounced = React.useRef(_.debounce(setFilterValue, 500));
+
   React.useEffect(() => {
     fetchList();
   }, [page, pageSize, filter]);
@@ -70,11 +74,13 @@ const useInventoryState = () => {
     }
   }
 
-  const onFilterChange = (filter) => {
-    // TODO: Only does one filter at a time
-    const { items } = filter;
-    const [{ columnField, value }] = items;
-    setFilter({ property: columnField, value });
+  const onFilterChange = (e) => {
+    const filter = {
+      code: e.target.value,
+      name: e.target.value,
+    };
+
+    setFilterValueDebounced.current(filter);
   }
 
   const changePage = (newPage) => setPage(newPage);
